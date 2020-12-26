@@ -1,0 +1,38 @@
+body {
+  margin-top: 50px;
+}
+
+.table-products {
+  margin: 0 auto;
+}
+
+.table-products__title {
+  margin: 0 auto;
+  border: 2px solid #384650;
+  background-color: #839098;
+}
+
+.table-products__element {
+  text-align: center;
+  border: 2px solid #9a8c7a;
+  background-color: #bcb0a1;
+}
+
+.table-products__element--count {
+  text-align: center;
+  background-color: #bcb0a1;
+  border: none;
+}
+
+.table-products__element--priceForOne {
+  text-align: center;
+  background-color: #bcb0a1;
+  border: none;
+}
+
+.table-products__element--allPrice {
+  text-align: right;
+  font-weight: bold;
+  border: 2px solid #384650;
+  background-color: #839098;
+}

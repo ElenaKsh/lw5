@@ -1,0 +1,35 @@
+<table class="table-products">
+  <tr>
+    <th class="table-products__title">Название</th>
+    <th class="table-products__title">Количество</th>
+    <th class="table-products__title">Цена за 1</th>
+    <th class="table-products__title">Цена (total)</th>
+  </tr>
+  {{#each productElements}}
+  <tr>
+    <td class="table-products__element">{{name}}</td>
+    <td class="table-products__element">
+      <input
+        type="text"
+        value="{{count}}"
+        readonly
+        class="table-products__element--count"
+        id="count-{{id}}"
+      />
+    </td>
+    <td class="table-products__element">
+      <input
+        type="text"
+        value="{{priceForOne}}"
+        readonly
+        class="table-products__element--priceForOne"
+        id="priceForOne-{{id}}"
+      />
+    </td>
+    <td class="table-products__element">{{priceTotal}}</td>
+  </tr>
+  {{/each}}
+  <tr>
+    <td colspan="4" class="table-products__element--allPrice">Общая стоимость: {{allPrice}}</td>
+  </tr>
+</table>
