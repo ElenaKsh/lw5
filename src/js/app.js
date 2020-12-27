@@ -1,32 +1,42 @@
 import productsTemplate from '../template/template.handlebars';
+import {
+  calculationTotalAmount,
+  calculationPriceProduct,
+  setCountProduct,
+  setPriceForOne
+} from './functions';
 
-function getPriceTotal(product) {
-  return product.count * product.priceForOne;
+function createObservableArray(array, callback) {
+  return new Proxy(array, {
+    apply(target, thisArg) {
+      callback();
+      return thisArg[target].apply(this);
+    },
+    deleteProperty() {
+      callback();
+      return true;
+    },
+    set(target, property, value) {
+      target[property] = value;
+      callback();
+      return true;
+    }
+  });
 }
 
-function getAllPrice(products) {
-  let sum = 0;
-  for (let i = 0; i < products.length; i++) {
-    sum += getPriceTotal(products[i]);
-  }
-  return sum;
+function createObservableObject(object, callback) {
+  return new Proxy(object, {
+    set(target, property, value) {
+      target[property] = value;
+      if (property === 'count' || property === 'priceForOne') {
+        callback();
+      }
+      return true;
+    }
+  });
 }
 
-function calculationPriceProduct(products) {
-  products.forEach(
-    (product) => (product.priceTotal = getPriceTotal(product))
-  );
-}
-
-function setCountProduct(product, count) {
-  product.count = count;
-}
-
-function setPriceForOne(product, priceForOne) {
-  product.priceForOne = priceForOne;
-}
-
-const productElements = [
+let productElements = [
   {
     id: 1,
     name: 'Молоко',
@@ -50,14 +60,16 @@ const productElements = [
 window.onload = function load() {
   function refresh() {
     calculationPriceProduct(productElements);
-    const allPrice = getAllPrice(productElements);
+    const allPrice = calculationTotalAmount(productElements);
     const productsHTML = productsTemplate({ productElements, allPrice });
     document.querySelector('body').innerHTML = productsHTML;
-    document.querySelectorAll('.table-products__element input').forEach((element) => {
-      element.addEventListener('dblclick', (event) => {
-        event.target.readOnly = false;
+    document
+      .querySelectorAll('.table-products__element input')
+      .forEach((element) => {
+        element.addEventListener('dblclick', (event) => {
+          event.target.readOnly = false;
+        });
       });
-    });
     document
       .querySelectorAll('.table-products__element--count')
       .forEach((element) => {
@@ -67,7 +79,6 @@ window.onload = function load() {
             productElements.forEach((product) => {
               if (product.id === id) {
                 setCountProduct(product, +event.target.value);
-                refresh();
               }
             });
           }
@@ -82,12 +93,15 @@ window.onload = function load() {
             productElements.forEach((product) => {
               if (product.id === id) {
                 setPriceForOne(product, +event.target.value);
-                refresh();
               }
             });
           }
         });
       });
   }
+  for (let i = 0; i < productElements.length; i++) {
+    productElements[i] = createObservableObject(productElements[i], refresh);
+  }
+  productElements = createObservableArray(productElements, refresh);
   refresh();
 };

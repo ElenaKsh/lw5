@@ -13,5 +13,7 @@ module.exports = {
         "import/prefer-default-export": "off",
         "no-plusplus": "off",
         "comma-dangle": ["error", "never"],
+        "global-require": 0,
+        "no-param-reassign": [2, {"props": false}],
     },
 };
