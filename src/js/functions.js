@@ -23,6 +23,6 @@ export function setCountProduct(product, count) {
   product.count = count;
 }
 
-export function setPriceForOne(product, priceForOne) {
-  product.priceForOne = priceForOne;
+export function setPriceProduct(product, priceProduct) {
+  product.priceForOne = priceProduct;
 }

@@ -3,7 +3,7 @@ import {
   calculationTotalAmount,
   calculationPriceProduct,
   setCountProduct,
-  setPriceForOne
+  setPriceProduct
 } from './functions';
 
 function createObservableArray(array, callback) {
@@ -92,7 +92,7 @@ window.onload = function load() {
             const id = +event.target.id.replace('priceForOne-', '');
             productElements.forEach((product) => {
               if (product.id === id) {
-                setPriceForOne(product, +event.target.value);
+                setPriceProduct(product, +event.target.value);
               }
             });
           }
