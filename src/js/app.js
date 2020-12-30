@@ -4,7 +4,7 @@ import {
   calculationPriceProduct,
   setCountProduct,
   setPriceProduct
-} from './functions';
+} from './products-methods';
 
 function createObservableArray(array, callback) {
   return new Proxy(array, {
@@ -28,9 +28,7 @@ function createObservableObject(object, callback) {
   return new Proxy(object, {
     set(target, property, value) {
       target[property] = value;
-      if (property === 'count' || property === 'priceForOne') {
-        callback();
-      }
+      callback();
       return true;
     }
   });
@@ -59,7 +57,6 @@ let productElements = [
 
 window.onload = function load() {
   function refresh() {
-    calculationPriceProduct(productElements);
     const allPrice = calculationTotalAmount(productElements);
     const productsHTML = productsTemplate({ productElements, allPrice });
     document.querySelector('body').innerHTML = productsHTML;
@@ -79,6 +76,7 @@ window.onload = function load() {
             productElements.forEach((product) => {
               if (product.id === id) {
                 setCountProduct(product, +event.target.value);
+                calculationPriceProduct(productElements);
               }
             });
           }
@@ -93,15 +91,18 @@ window.onload = function load() {
             productElements.forEach((product) => {
               if (product.id === id) {
                 setPriceProduct(product, +event.target.value);
+                calculationPriceProduct(productElements);
               }
             });
           }
         });
       });
   }
+
   for (let i = 0; i < productElements.length; i++) {
     productElements[i] = createObservableObject(productElements[i], refresh);
   }
   productElements = createObservableArray(productElements, refresh);
+  calculationPriceProduct(productElements);
   refresh();
 };
